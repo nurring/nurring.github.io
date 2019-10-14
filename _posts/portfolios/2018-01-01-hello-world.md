@@ -3,7 +3,7 @@ layout: posts
 title:  "Spring, Hibernate를 적용한 사용자 관리 모듈 구현"
 date:   2019-10-08
 period: 2019.9.1 - 2019.9.26
-category: [ portfolio ]
+category: [ portfolios ]
 tags: [ java, Spring, Hibernate, Ignite, JPA, Mysql, HTML5, ajax ]
 ---
 
