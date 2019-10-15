@@ -94,6 +94,7 @@
   dl {
     font-size: 1em;
   }
+  
 
   /* paragraph indents */
   p {
@@ -378,6 +379,10 @@
   text-transform: uppercase;
   text-align: right;
   text-decoration: none;
+}
+
+.article-wrap p {
+  font-size: 12px; /* 16 is the default increase if you want it larger */
 }
 
 /*
