@@ -1,143 +1,195 @@
 ---
-title:  "Spring, Hibernate를 적용한 사용자 관리 모듈 구현"
-period:   2019.9.2 - 2019.9.26
+title:  "디바이스 리포트 & 실시간 모니터링 웹 프로그램"
+period:   2019.10.21 - 2019.11.28
 category: portfolios
 tags: 
    - Spring
-   - Hibernate
-   - Ignite
-   - JPA
+   - Mybatis
 toc: true
 toc_sticky: true
 ---
 
 ## 개발 환경
-+ eclipse
-+ Spring Tools 4
-+ Maven
-+ Hibernate
-+ Ignite
++ Java
++ Spring4
++ myBatis
 + Mysql
-+ Tomcat 8.5
++ Tomcat9
 <br>
 
 
 ## 개발 개요
-MVC 모델을 적용한 UC(Unified Communications) 사용자 관리 모듈을 구현하였다.   
-사용자와 연락처 엔티티를 매핑하였으며 Persistant API를 이용하여 SQL 명시를 최대한 줄이고,  
-1.2차 캐시를 적용하여 대량의 데이터 처리에 유연하도록 구현했다.
+IoT 기기의 데이터를 실시간으로 모니터링하고 통계와 함께 리포트하는 웹 프로그램을 구현하였다.   
+통계 그래프 구현을 위한 컬럼과 테이블 조인을 세부적으로 조정하기 위하여 myBatis를 이용하였으며, 실시간 데이터 감지 및 그래프 업데이트를 위해 ajax polling을 적용하였다.
 
 
 
 ## DB 설계
-![erd](/assets/images/erd.png)
+![erd](/assets/images/erd_devicemntr.png)
 
 <br>
 
 
 ## 주요 사용 기능
-Maven 프로젝트에 의존성을 주입하였다. 객체 지향적인 프로그램 구현을 위해 ORM Framework(Hibernate 이용)을 적용하였다.
+Maven 프로젝트에 의존성을 주입하였다. myBatis *Mapper.xml 파일에 쿼리를 작성하고 도메인 파라미터와 매핑하였으며, ajax 통신을 위하여 Jackson을 이용해 json 형식의 데이터를 리턴하도록 하였다.
 
-### pom.xml 설정
-pom.xml에 다음과 같이 JPA, Hibernate, Ignite 의존성을 주입하였다.   
+### 환경 설정
+pom.xml에 다음과 같이 mybatis, Jackson 의존성을 주입하였다.   
 
 ```xml
 //pom.xml
-//JPA 관련
+<!-- myBatis -->
 <dependency>
-   <groupId>org.springframework.data</groupId>
-   <artifactId>spring-data-jpa</artifactId>
-   <version>2.1.10.RELEASE</version>
-</dependency>
-
-//Hibernate 관련
-<dependency>
-   <groupId>org.hibernate</groupId>
-   <artifactId>hibernate-envers</artifactId>
-   <version>${hibernate.version}</version>
+   <groupId>org.mybatis</groupId>
+   <artifactId>mybatis</artifactId>
+   <version>3.4.1</version>
 </dependency>
 <dependency>
-   <groupId>org.hibernate</groupId>
-   <artifactId>hibernate-entitymanager</artifactId>
-   <version>${hibernate.version}</version>
+   <groupId>org.mybatis</groupId>
+   <artifactId>mybatis-spring</artifactId>
+   <version>1.3.0</version>
 </dependency>
-
-//Ignite 관련
+<!-- Jackson -->
 <dependency>
-   <groupId>org.apache.ignite</groupId>
-   <artifactId>ignite-slf4j</artifactId>
-   <version>${ignite.version}</version>
+   <groupId>com.fasterxml.jackson.core</groupId>
+   <artifactId>jackson-core</artifactId>
+   <version>2.10.1</version>
 </dependency>
+<!-- Jackson-databind -->
 <dependency>
-   <groupId>org.apache.ignite</groupId>
-   <artifactId>ignite-spring</artifactId>
-   <version>${ignite.version}</version>
-</dependency>
-<dependency>
-   <groupId>org.apache.ignite</groupId>
-   <artifactId>ignite-indexing</artifactId>
-   <version>${ignite.version}</version>
-</dependency>
-<dependency>
-   <groupId>org.apache.ignite</groupId>
-   <artifactId>ignite-hibernate_5.1</artifactId>
-   <version>${ignite.hibernate.version}</version>
+   <groupId>com.fasterxml.jackson.core</groupId>
+   <artifactId>jackson-databind</artifactId>
+   <version>2.10.1</version>
 </dependency>
 ```
-
 <br>
+root-context 파일에 jdbc, myBatis 설정파일 및 매퍼, 세션 정보를 bean 등록했다.
+```xml
+//root-context.xml
+<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+   <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"></property>
+   <property name="url" value="jdbc:mysql://ip주소:3306/DB명?useSSL=false&amp;serverTimezone=UTC"></property>
+   <property name="username" value="유저 아이디"></property>
+   <property name="password" value="비밀번호"></property>
+</bean>	
 
-### JPA Annotation 사용
-다음과 같이 어노테이션을 이용해 각 클래스를 정의한다.
+<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+   <property name="dataSource" ref="dataSource"></property>
+   <property name="configLocation" value="classpath:/mybatis-config.xml"></property>
+      //myBatis 관련 설정을 가져옴	
+   <property name="mapperLocations" value="classpath:mappers/**/*Mapper.xml"></property>
+      //mappers 패키지 하위에 포함 된 파일명이 Mapper로 끝나는 모든 xml 파일을 mapper로 가져옴
+</bean>
 
-```java
-//UcUser.java
-@Entity //테이블
-public class UcUser implements Serializable {
-```
-
-```java
-//UserRepository.java
-@Repository //DAO
-public interface UserRepository 
-	extends JpaRepository<UcUser, Long>, QuerydslPredicateExecutor<UcUser>{
-```
-
-```java
-//UcController.java
-@Controller
-public class UcController {
+<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+   <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>
+</bean>
 ```
 <br>
 
-### 테이블 간 일대다 연결
-OneToMany, ManyToOne 어노테이션을 이용해 정의한다.   
-FetchType을 Lazy로 정의하면 엔티티 조회 시 연결된 다른 엔티티를 함께 불러오지 않는다.(_지연 로딩_)   
-필요할 때 get하여 사용하며, 대량의 데이터가 존재할 때 메모리를 절약할 수 있다. eager로 설정할 경우 조회시 매번 함께 조회된다.(_즉시 로딩_)
+### *Mapper.xml ~ 테이블 간 일대다 연결
+도메인과 매핑 될 컬럼, 테이블 정보를 명시하고 데이터를 조회해 올 쿼리를 직접 작성했다.   
+테이블 간 관계의 경우, 자식 테이블에서 가져올 컬럼들을 resultMap에 collection으로 명시하였다. 그리고 Join 쿼리에서 resultMap을 명시하여 테이블을 매핑시켰다.   
+Left Join을 이용하여 자식 테이블을 기준으로 부모 테이블의 데이터가 추가될 수 있게 Join 쿼리를 작성하였으며,   
+실제 데이터 형식은 resultMap 정보를 통해, 쿼리에 명시된 부모 테이블 컬럼에 collection으로 자식 테이블 컬럼들이 따라오게 된다. 
 
-
-```java
-//UcUser.java
-@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL, mappedBy="ucUser")
-	private List<UcPhone> phones;//전화 테이블
-```
-
-```java
-//UcPhone.java
-@ManyToOne
-	@JoinColumn(name="userid")
-	private UcUser ucUser;
+```xml
+//errorMapper.xml
+<mapper namespace="ErrorMapper">	
+   <resultMap id="DeviceResult" type="DeviceVO">
+      <id property="device_id" column="device_id" />
+      <result property="device_name" column="device_name"/>
+      <result property="device_address" column="device_address"/>
+      <result property="device_latitude" column="device_latitude"/>
+      <result property="device_longitude" column="device_longitude"/>
+      <result property="regidate" column="regidate"/>
+      <result property="updatedate" column="updatedate"/>
+      <collection property="errorList" ofType="ErrorVO" resultMap="ErrorResult"/>
+   </resultMap>
+   
+   <resultMap id="ErrorResult" type="ErrorVO">
+      <id column="e_id" property="e_id"/>
+      <result column="device_ip" property="device_ip"/>
+      <result column="err_code" property="err_code"/>
+      <result column="err_type" property="err_type"/>
+      <result column="err_message" property="err_message"/>
+      <result column="server_time" property="server_time"/>
+      <result column="count" property="count"/>
+      <result column="month" property="month"/>
+      <result column="year" property="year"/>
+   </resultMap>
+...
+   <select id="err24" resultMap="DeviceResult">
+   SELECT 
+      a.device_id, a.device_name, a.device_ip, a.device_latitude, a.device_longitude, b.err_code, b.err_type, b.err_message, b.server_time
+   FROM
+      (SELECT *
+      FROM gztls_error
+      WHERE server_time BETWEEN #{from} and #{til} ) b
+   LEFT JOIN gztls_device a
+   ON a.device_ip = b.device_ip
+   ORDER BY b.server_time DESC;
+   </select>
+...
 ```
 <br>
 
-### 메서드 정의
-JPA 문법에 따라 SQL 메서드를 만든다. count등 기본 함수가 내장되어 있어 선언하지 않아도 사용할 수 있으므로, 아래와 같이 특수한 경우만 정의한다. _[JPA Reference 문서 참조](https://docs.spring.io/spring-data/jpa/docs/current-SNAPSHOT/reference/html/#reference)_
+### *Mapper.xml ~ 동적 SQL
+myBatis가 제공하는 Dynamic SQL 기능으로 쿼리의 재활용성을 높였다._[myBatis Reference 참조](https://mybatis.org/mybatis-3/dynamic-sql.html)_   
+아래와 같이 조건에 따라 쿼리가 변형 적용되기 때문에 효율적으로 원하는 데이터를 가져올 수 있다.
 
+```xml
+//errorMapper.xml
+...
+<select id = "selectErrCnt" resultMap="ErrorResult">
+SELECT err_type, COUNT(err_type) as count
+FROM gztls_error
+<where>
+   <if test='server_time != null'>
+   server_time BETWEEN #{server_time} AND #{to_date}
+   </if>
+</where> 
+GROUP BY err_type;	
+</select>
+...
+```
+<br>
+복잡한 조건 등의 이유로 파라미터를 여러개 받아오는 일이 잦아 map 방식으로 파라미터를 받아와 명확히 구분되도록 하였다.
+```java
+//ErrorDAOImpl.java
+...
+@Override
+public List<ErrorVO> selectErrCnt(Map<String, String> map) {
+   return sqlSession.selectList(SelectErrCnt, map);
+}
+...
+```
+```java
+//ErrorServiceImpl.java
+...
+@Override
+public List<ErrorVO> selectErrCnt(Map<String, String> map) {
+   return dao.selectErrCnt(map);
+}
+...
+```
+```java
+//RController.java
+...
+@RequestMapping(value="/errcntjsn", method=RequestMethod.GET)
+public List<ErrorVO> errcnt(@RequestParam Map<String, String> param) {	
+   logger.info("param..........."+param);
+   List<ErrorVO> vos = es.selectErrCnt(param);
+   return vos;		
+}
+...
+```
+<br>
+
+### @ResponseBody와 Jackson을 이용한 json 리턴
 
 ```java
-//UserRepository.java
-public Page<UcUser> findAll(Pageable pageable); //페이지네이션
-public List<UcUser> findAllByAddressContaining(String address); //주소 검색
+
 ```
 <br>
 
