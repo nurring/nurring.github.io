@@ -206,6 +206,62 @@ public class RController {
 ```
 <br>
 
+### 배포용 설치 파일 제작
+프로그램 배포에 용이하도록 설치 스크립트를 만들었다. Ubuntu 16.04 기준으로 개발하고 설치 매뉴얼에 사용 환경을 명시하였다.   
+필수 프로그램인 mysql과 tomcat을 설치하고 설치 파일에 포함된 웹 프로그램 war파일을 웹서버 위치에 압축 해제한 후, 사용자의 ip와 mysql 로그인 정보를 입력받아 jdbc 설정 파일을 수정하였다.
+
+```bash
+#!/bin/bash
+
+echo "**********Ready to install TLS program..**********"
+sudo apt-get update
+echo "**********Installing mysql..**********"
+sudo apt-get install mysql-server
+echo "**********Please enter the PASSWORD for mysql **root** user!**********"
+read userpass
+echo "**********Setting Database & Tables..**********"
+mysql -uroot -p${userpass} mysql < ./code.sql
+mysql -uroot -p${userpass} kopo < ./device.sql
+mysql -uroot -p${userpass} kopo < ./err_code.sql
+mysql -uroot -p${userpass} kopo < ./error.sql
+mysql -uroot -p${userpass} kopo < ./success.sql
+mysql -uroot -p${userpass} -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' identified by '${userpass}';"
+mysql -uroot -p${userpass} -e "FLUSH PRIVILEGES;"
+echo "**********mysql installed**********"
+echo "**********Allowing access via external IP..**********"
+sudo ufw allow 3306/tcp
+sudo sed -i "s/bind-address/#bind-address/" /etc/mysql/mysql.conf.d/mysqld.cnf
+sudo sed -i "s/[mysql]/[client]\n default-character-set=utf8\n\n [mysql]\n default-character-set=utf8\n\n [mysqld]\n collation-server = utf8_unicode_ci\n init-connect='SET NAMES utf8'\n character-set-server = utf8/" /etc/mysql/conf.d/mysql.cnf
+sudo /etc/init.d/mysql restart
+echo "**********Installing tomcat8..**********"
+sudo apt-get install tomcat8
+echo "**********tomcat8 installed**********"
+echo "**********Starting tomcat8**********"
+sudo service tomcat8 start
+echo "**********Installing TLS monitoring program..**********"
+sudo cp gztls.war /var/lib/tomcat8/webapps
+echo "**********Unzipping program..please wait**********"
+until [ -d /var/lib/tomcat8/webapps/gztls ]
+do
+	echo "now unzipping..";
+	sleep 2;
+done
+if [ -d /var/lib/tomcat8/webapps/gztls ];
+then 
+	echo "**********Program unzipped**********"
+fi
+echo "**********Setting configurations..**********"
+echo "**********Please enter your external IP(If you use localhost, enter 127.0.0.1)**********"
+read userip
+sudo sed -i "s/ipipip/${userip}/" /var/lib/tomcat8/webapps/gztls/WEB-INF/views/header.jsp
+sudo sed -i "s/ipipip/${userip}/" /var/lib/tomcat8/webapps/gztls/WEB-INF/spring/root-context.xml
+sudo sed -i "s/pwpwpw/${userpass}/" /var/lib/tomcat8/webapps/gztls/WEB-INF/spring/root-context.xml
+sudo /etc/init.d/tomcat8 restart
+echo "**********Now you can access http://${userip}:8080/gztls **********"
+echo "**********For more informations please check README.md**********"
+echo "**********THANK YOU**********"
+exit
+```
 
 ## 구현 기능
 ### Chart.js를 이용한 통계 차트
@@ -263,21 +319,110 @@ function updateYear(){
 ### Kakao API를 이용한 디바이스 위치 확인
 비동기 통신으로 가져온 주소 데이터를 가공하여 지도에 마커로 뿌려주었다. 
 
-```java
-
+```javascript
+//bymap.jsp
+...
+$.ajax({
+   url : "dlistjsn",
+   type : "GET",
+   error : function() {
+      alert("err");
+   }
+}).done(function(results){
+   ...
+   for(i in results){
+      set=[];
+      set.content=results[i].device_name;
+      set.latlng= temp(results[i].device_latitude,results[i].device_longitude);
+      arr.push(set);
+      centerlat+=results[i].device_latitude;
+		centerlng+=results[i].device_longitude;		
+   }
+   centerlat = centerlat/lnth; //마커들의 중점을 구하여 지도의 중점으로
+   centerlng = centerlng/lnth;
+   getmap(arr,centerlat,centerlng);
+   ...
+}
+...
+function getmap(arr, clat, clng){	
+	var mapContainer = document.getElementById('map'), 
+	mapOption = { 
+	    center: new kakao.maps.LatLng(clat, clng), //중점
+	    level: 12
+	};		
+	var map = new kakao.maps.Map(mapContainer, mapOption); //지도 생성
+	var mapTypeControl = new kakao.maps.MapTypeControl();	//지도 디자인 관련 설정
+	map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+	var zoomControl = new kakao.maps.ZoomControl();
+	map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+	
+	var positions="["; //인포윈도우에 출력될 내용
+	for (i=0; i<arr.length; i++){
+		positions += "{content: '"+arr[i].content+"', latlng: "+arr[i].latlng+"},"
+	}
+	positions+="]";
+	console.log("positions",positions);
+	positions= eval(positions);		
+	
+	for (var i = 0; i < positions.length; i ++) { //마커 생성
+		var marker = new kakao.maps.Marker({
+		    map: map,
+		    position: positions[i].latlng
+		});		
+		
+		var infowindow = new kakao.maps.InfoWindow({ //인포윈도우 생성
+		    content: positions[i].content
+		});		
+		kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow)); //이벤트 등록
+		kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+	}		
+	function makeOverListener(map, marker, infowindow) {
+		return function() {
+		    infowindow.open(map, marker);
+		};
+	}		
+	function makeOutListener(infowindow) {
+		return function() {
+		    infowindow.close();
+		};
+	}
+}
+...
 ```
 <br>
 
 ### 실시간 오류 데이터 감지
+ajax long polling 방식으로 실시간 오류 데이터 발생을 모니터링하였다.   
 
 ```javascript
-
+$(document).ready(function() {	
+(function poll(){
+	$.ajax({
+		url : "errnowjsn",
+		type : "GET",
+		success: function(results){
+			if(results.length != 0){
+				alert("에러가 발생했습니다. 실시간 에러 확인 페이지로 이동합니다.");
+				window.location.href="?contentPage=errnow.jsp";
+			}
+		},
+		error : function() {
+			alert("err");
+		},
+		complete: poll,
+		timeout: 600000
+	});
+})();
+});
 ```
 <br>
 
 ## 시연 영상 
+### 설치
+ {% youtube "https://youtu.be/lR6mtzKAh7M" %}
 
- {% youtube "https://www.youtube.com/embed/ILHozj9ncG0" %}
-
+### 프로그램 기능
+ {% youtube "https://youtu.be/LnaarLEgfaY" %}
 ## 프로젝트 회고
- 
+프론트 위주의 개발은 오랜만이었다. java보다 자유로운 형식 때문에 계획 없이 코드를 짜니 스스로도 파악하기 어려운 복잡한 코드가 되어 다 만들어놓고 처음부터 다시 정리한 페이지가 몇 개나 된다. 코드 정리의 중요성을 체감하는 기회였다.   
+테이블 설계부터 개발 환경 설정, 프로그램 설치 파일, 그 외 정의서나 매뉴얼 등 문서 작업까지, 프로그램 배포에 필요한 시작부터 끝까지 온전하게 마친 것은 처음이다. 개발이라 하면 그동안 코드만 짜고 이 프로그램을 어떻게 누군가가 사용할 수 있게 할지 생각해본 적이 없었다. 이번 프로젝트를 통해 얕게나마 그에 대한 고민을 해볼 수 있어 좋았다. 누군가 사용할 수 있다고 생각하니 같은 화면도 다시 한 번 고민하게 되고, 앞으로 개발을 할 때에도 항상 누군가 내 코드를 실제로 사용할 것이라는 마음가짐으로 더 책임감 있게 개발해야겠다.
