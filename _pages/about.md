@@ -11,7 +11,7 @@ TOEIC 960, 新HSK 6급(만료), 정보처리기사
 관리 업무를 담당하여 상황 대처 능력과 적응력을 높였습니다. 또한
 입시 학원에서 강사로 근무하여 프레젠테이션에 익숙합니다. 폴리텍
 데이터융합S/W 과정으로 언어에 대한 관심을 Programming
-Language까지 확장하여 다양한 프로그램을 학습하고 있습니다.
+Language까지 확장하여 다양한 프로그램과 언어를 익혔습니다.
 
 **Skill Set**<br/>
 **Java, Spring, Java Script, CSS, Oracle, Mysql, Linux, Android, Python**
