@@ -1,0 +1,1013 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.17.0 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="ko" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Spring, Hibernate를 적용한 사용자 관리 모듈 구현- 기업 연계 프로젝트 - Nuri’s Blog</title>
+<meta name="description" content="GitHub Here: https://github.com/nurring/KOPOUcProject">
+
+
+  <meta name="author" content="Nuri Na">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ko_KO">
+<meta property="og:site_name" content="Nuri's Blog">
+<meta property="og:title" content="Spring, Hibernate를 적용한 사용자 관리 모듈 구현- 기업 연계 프로젝트">
+<meta property="og:url" content="https://nurring.github.io/portfolios/ucmodule/">
+
+
+  <meta property="og:description" content="GitHub Here: https://github.com/nurring/KOPOUcProject">
+
+
+
+  <meta property="og:image" content="https://nurring.github.io/assets/images/na.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2019-09-26T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://nurring.github.io/portfolios/ucmodule/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Nuri Na",
+      "url": "https://nurring.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Nuri's Blog Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          Nuri Na's Blog
+          <span class="site-subtitle">Language Collector</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/portfolios/" >Portfolio</a>
+            </li><li class="masthead__menu-item">
+              <a href="/tags/" >Tag</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/images/na.jpg" alt="Nuri Na" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Nuri Na</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>I do <strong>programming</strong>.</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="nurring@gmail.com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email</a></li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://github.com/nurring" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Spring, Hibernate를 적용한 사용자 관리 모듈 구현- 기업 연계 프로젝트">
+    <meta itemprop="description" content="GitHub Here: https://github.com/nurring/KOPOUcProject">
+    <meta itemprop="datePublished" content="September 26, 2019">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Spring, Hibernate를 적용한 사용자 관리 모듈 구현<br />- 기업 연계 프로젝트
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  6 minute read
+
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#개발-환경">개발 환경</a></li>
+  <li><a href="#개발-개요">개발 개요</a></li>
+  <li><a href="#db-설계">DB 설계</a></li>
+  <li><a href="#주요-사용-기능">주요 사용 기능</a>
+    <ul>
+      <li><a href="#pomxml-설정">pom.xml 설정</a></li>
+      <li><a href="#jpa-annotation-사용">JPA Annotation 사용</a></li>
+      <li><a href="#테이블-간-일대다-연결">테이블 간 일대다 연결</a></li>
+      <li><a href="#메서드-정의">메서드 정의</a></li>
+      <li><a href="#2차-캐시-적용">2차 캐시 적용</a></li>
+    </ul>
+  </li>
+  <li><a href="#구현-기능">구현 기능</a>
+    <ul>
+      <li><a href="#사용자-조회">사용자 조회</a></li>
+      <li><a href="#페이지네이션">페이지네이션</a></li>
+      <li><a href="#음성-검색">음성 검색</a></li>
+      <li><a href="#사용자-crud---수정-날짜-기록">사용자 CRUD - 수정 날짜 기록</a></li>
+      <li><a href="#연락처-crud---중복-검사">연락처 CRUD - 중복 검사</a></li>
+    </ul>
+  </li>
+  <li><a href="#시연-영상">시연 영상</a></li>
+  <li><a href="#프로젝트-회고">프로젝트 회고</a></li>
+</ul>
+            </nav>
+          </aside>
+        
+        <p>GitHub Here: <a href="https://github.com/nurring/KOPOUcProject">https://github.com/nurring/KOPOUcProject</a></p>
+
+<h2 id="개발-환경">개발 환경</h2>
+<ul>
+  <li>Spring 4</li>
+  <li>Hibernate</li>
+  <li>Ignite</li>
+  <li>Mysql</li>
+  <li>Tomcat 8.5
+<br /></li>
+</ul>
+
+<h2 id="개발-개요">개발 개요</h2>
+<p>MVC 모델을 적용한 UC(Unified Communications) 사용자 관리 모듈을 구현하였다. <br />
+사용자와 연락처 엔티티를 매핑하였으며 Persistant API를 이용하여 SQL 명시를 최대한 줄이고,<br />
+1.2차 캐시를 적용하여 대량의 데이터 처리에 유연하도록 구현했다.</p>
+
+<h2 id="db-설계">DB 설계</h2>
+<p><img src="/assets/images/erd_ucmodule.png" alt="erd" /></p>
+
+<p><br /></p>
+
+<h2 id="주요-사용-기능">주요 사용 기능</h2>
+<p>Maven 프로젝트에 의존성을 주입하였다. 객체 지향적인 프로그램 구현을 위해 ORM Framework(Hibernate 이용)을 적용하였다.</p>
+
+<h3 id="pomxml-설정">pom.xml 설정</h3>
+<p>pom.xml에 다음과 같이 JPA, Hibernate, Ignite 의존성을 주입하였다.</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//pom.xml
+//JPA 관련
+<span class="nt">&lt;dependency&gt;</span>
+   <span class="nt">&lt;groupId&gt;</span>org.springframework.data<span class="nt">&lt;/groupId&gt;</span>
+   <span class="nt">&lt;artifactId&gt;</span>spring-data-jpa<span class="nt">&lt;/artifactId&gt;</span>
+   <span class="nt">&lt;version&gt;</span>2.1.10.RELEASE<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+
+//Hibernate 관련
+<span class="nt">&lt;dependency&gt;</span>
+   <span class="nt">&lt;groupId&gt;</span>org.hibernate<span class="nt">&lt;/groupId&gt;</span>
+   <span class="nt">&lt;artifactId&gt;</span>hibernate-envers<span class="nt">&lt;/artifactId&gt;</span>
+   <span class="nt">&lt;version&gt;</span>${hibernate.version}<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+   <span class="nt">&lt;groupId&gt;</span>org.hibernate<span class="nt">&lt;/groupId&gt;</span>
+   <span class="nt">&lt;artifactId&gt;</span>hibernate-entitymanager<span class="nt">&lt;/artifactId&gt;</span>
+   <span class="nt">&lt;version&gt;</span>${hibernate.version}<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+
+//Ignite 관련
+<span class="nt">&lt;dependency&gt;</span>
+   <span class="nt">&lt;groupId&gt;</span>org.apache.ignite<span class="nt">&lt;/groupId&gt;</span>
+   <span class="nt">&lt;artifactId&gt;</span>ignite-slf4j<span class="nt">&lt;/artifactId&gt;</span>
+   <span class="nt">&lt;version&gt;</span>${ignite.version}<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+   <span class="nt">&lt;groupId&gt;</span>org.apache.ignite<span class="nt">&lt;/groupId&gt;</span>
+   <span class="nt">&lt;artifactId&gt;</span>ignite-spring<span class="nt">&lt;/artifactId&gt;</span>
+   <span class="nt">&lt;version&gt;</span>${ignite.version}<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+   <span class="nt">&lt;groupId&gt;</span>org.apache.ignite<span class="nt">&lt;/groupId&gt;</span>
+   <span class="nt">&lt;artifactId&gt;</span>ignite-indexing<span class="nt">&lt;/artifactId&gt;</span>
+   <span class="nt">&lt;version&gt;</span>${ignite.version}<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;dependency&gt;</span>
+   <span class="nt">&lt;groupId&gt;</span>org.apache.ignite<span class="nt">&lt;/groupId&gt;</span>
+   <span class="nt">&lt;artifactId&gt;</span>ignite-hibernate_5.1<span class="nt">&lt;/artifactId&gt;</span>
+   <span class="nt">&lt;version&gt;</span>${ignite.hibernate.version}<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h3 id="jpa-annotation-사용">JPA Annotation 사용</h3>
+<p>다음과 같이 어노테이션을 이용해 각 클래스를 정의한다.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//UcUser.java</span>
+<span class="nd">@Entity</span> <span class="c1">//테이블</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">UcUser</span> <span class="kd">implements</span> <span class="nc">Serializable</span> <span class="o">{</span>
+</code></pre></div></div>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//UserRepository.java</span>
+<span class="nd">@Repository</span> <span class="c1">//DAO</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">UserRepository</span> 
+	<span class="kd">extends</span> <span class="nc">JpaRepository</span><span class="o">&lt;</span><span class="nc">UcUser</span><span class="o">,</span> <span class="nc">Long</span><span class="o">&gt;,</span> <span class="nc">QuerydslPredicateExecutor</span><span class="o">&lt;</span><span class="nc">UcUser</span><span class="o">&gt;{</span>
+</code></pre></div></div>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//UcController.java</span>
+<span class="nd">@Controller</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">UcController</span> <span class="o">{</span>
+</code></pre></div></div>
+<p><br /></p>
+
+<h3 id="테이블-간-일대다-연결">테이블 간 일대다 연결</h3>
+<p>OneToMany, ManyToOne 어노테이션을 이용해 정의한다. <br />
+FetchType을 Lazy로 정의하면 엔티티 조회 시 연결된 다른 엔티티를 함께 불러오지 않는다.(<em>지연 로딩</em>) <br />
+필요할 때 get하여 사용하며, 대량의 데이터가 존재할 때 메모리를 절약할 수 있다. eager로 설정할 경우 조회시 매번 함께 조회된다.(<em>즉시 로딩</em>)</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//UcUser.java</span>
+<span class="nd">@OneToMany</span><span class="o">(</span><span class="n">fetch</span><span class="o">=</span><span class="nc">FetchType</span><span class="o">.</span><span class="na">LAZY</span><span class="o">,</span> <span class="n">cascade</span><span class="o">=</span><span class="nc">CascadeType</span><span class="o">.</span><span class="na">ALL</span><span class="o">,</span> <span class="n">mappedBy</span><span class="o">=</span><span class="s">"ucUser"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">UcPhone</span><span class="o">&gt;</span> <span class="n">phones</span><span class="o">;</span><span class="c1">//전화 테이블</span>
+</code></pre></div></div>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//UcPhone.java</span>
+<span class="nd">@ManyToOne</span>
+	<span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span><span class="o">=</span><span class="s">"userid"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">UcUser</span> <span class="n">ucUser</span><span class="o">;</span>
+</code></pre></div></div>
+<p><br /></p>
+
+<h3 id="메서드-정의">메서드 정의</h3>
+<p>JPA 문법에 따라 SQL 메서드를 만든다. count등 기본 함수가 내장되어 있어 선언하지 않아도 사용할 수 있으므로, 아래와 같이 특수한 경우만 정의한다. <em><a href="https://docs.spring.io/spring-data/jpa/docs/current-SNAPSHOT/reference/html/#reference">JPA Reference 문서 참조</a></em></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//UserRepository.java</span>
+<span class="kd">public</span> <span class="nc">Page</span><span class="o">&lt;</span><span class="nc">UcUser</span><span class="o">&gt;</span> <span class="nf">findAll</span><span class="o">(</span><span class="nc">Pageable</span> <span class="n">pageable</span><span class="o">);</span> <span class="c1">//페이지네이션</span>
+<span class="kd">public</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">UcUser</span><span class="o">&gt;</span> <span class="nf">findAllByAddressContaining</span><span class="o">(</span><span class="nc">String</span> <span class="n">address</span><span class="o">);</span> <span class="c1">//주소 검색</span>
+</code></pre></div></div>
+<p><br /></p>
+
+<h3 id="2차-캐시-적용">2차 캐시 적용</h3>
+<p>Configuration 자바파일에 캐시가 적용될 위치를 명시한다. Ignite 설정 부분만 따로 뽑아 xml로 만들어 Configuration 파일에 Import했다. <br />
+어노테이션에 정의한 region을 value값으로 준다. 자식 엔티티로 연결된 객체도 추가로 명시해야 한다.</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//applicationContext-ignite.xml
+<span class="nt">&lt;bean</span> <span class="na">parent=</span><span class="s">"transactional-cache"</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"name"</span> <span class="na">value=</span><span class="s">"UcUser"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/bean&gt;</span>
+<span class="nt">&lt;bean</span> <span class="na">parent=</span><span class="s">"transactional-cache"</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"name"</span> <span class="na">value=</span><span class="s">"UcPhone"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/bean&gt;</span>
+<span class="nt">&lt;bean</span> <span class="na">parent=</span><span class="s">"transactional-cache"</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"name"</span>
+      <span class="na">value=</span><span class="s">"UcUser.phones"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/bean&gt;</span>
+</code></pre></div></div>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//SpringConfiguration.java</span>
+<span class="nd">@Configuration</span>
+<span class="nd">@ImportResource</span><span class="o">(</span><span class="n">locations</span> <span class="o">=</span> <span class="s">"classpath:applicationContext-ignite.xml"</span><span class="o">)</span> <span class="c1">//ignite 설정</span>
+<span class="o">......</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SpringConfiguration</span> <span class="o">{</span>
+<span class="o">......</span>
+   <span class="kd">public</span> <span class="nc">Properties</span> <span class="nf">additionalProperties</span><span class="o">()</span> <span class="o">{</span>
+   <span class="o">......</span>
+      <span class="n">properties</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="nc">AvailableSettings</span><span class="o">.</span><span class="na">USE_SECOND_LEVEL_CACHE</span><span class="o">,</span> <span class="nc">Boolean</span><span class="o">.</span><span class="na">TRUE</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span> <span class="c1">//2차 캐시 사용</span>
+      <span class="n">properties</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="nc">AvailableSettings</span><span class="o">.</span><span class="na">USE_QUERY_CACHE</span><span class="o">,</span> <span class="nc">Boolean</span><span class="o">.</span><span class="na">TRUE</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span> <span class="c1">//쿼리 캐시 사용</span>
+      <span class="n">properties</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="nc">AvailableSettings</span><span class="o">.</span><span class="na">GENERATE_STATISTICS</span><span class="o">,</span> <span class="nc">Boolean</span><span class="o">.</span><span class="na">TRUE</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span> <span class="c1">//캐시 결과 로그 출력</span>
+      <span class="n">properties</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="nc">AvailableSettings</span><span class="o">.</span><span class="na">CACHE_REGION_FACTORY</span><span class="o">,</span> <span class="nc">HibernateRegionFactory</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span> <span class="c1">//캐시 대상</span>
+
+      <span class="n">properties</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"org.apache.ignite.hibernate.ignite_instance_name"</span><span class="o">,</span> <span class="s">"cafe-grid"</span><span class="o">);</span>
+      <span class="n">properties</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">"org.apache.ignite.hibernate.default_access_type"</span><span class="o">,</span> <span class="s">"NONSTRICT_READ_WRITE"</span><span class="o">);</span>
+</code></pre></div></div>
+<p><br />
+엔티티 레벨의 캐시가 가능하도록 클래스에 캐시 어노테이션을 명시한다. <br />
+관리 모듈이므로 분산 간 트랜잭션 동시성을 예민하게 고려하지 않고 READ_WRITE/NONSTRICT_READ_WRITE 설정을 사용하였다. <br />
+두 엔티티와 연결된 객체에 설정하였다.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//UcUser.java</span>
+<span class="nd">@Cachable</span>
+<span class="nd">@Cache</span><span class="o">(</span><span class="n">region</span><span class="o">=</span><span class="s">"UcUser"</span><span class="o">,</span> <span class="n">usage</span> <span class="o">=</span> <span class="nc">CacheConcurrencyStrategy</span><span class="o">.</span><span class="na">READ_WRITE</span><span class="o">)</span>
+<span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">UcUser</span> <span class="kd">implements</span> <span class="nc">Serializable</span> <span class="o">{</span>
+<span class="o">......</span>
+	<span class="nd">@Cache</span><span class="o">(</span><span class="n">region</span><span class="o">=</span><span class="s">"UcUser.phones"</span><span class="o">,</span> <span class="n">usage</span> <span class="o">=</span> <span class="nc">CacheConcurrencyStrategy</span><span class="o">.</span><span class="na">NONSTRICT_READ_WRITE</span><span class="o">)</span>
+	<span class="nd">@OneToMany</span><span class="o">(</span><span class="n">fetch</span><span class="o">=</span><span class="nc">FetchType</span><span class="o">.</span><span class="na">LAZY</span><span class="o">,</span> <span class="n">cascade</span><span class="o">=</span><span class="nc">CascadeType</span><span class="o">.</span><span class="na">ALL</span><span class="o">,</span> <span class="n">mappedBy</span><span class="o">=</span><span class="s">"ucUser"</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">UcPhone</span><span class="o">&gt;</span> <span class="n">phones</span><span class="o">;</span>
+</code></pre></div></div>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//UcPhone.java</span>
+<span class="nd">@Cacheable</span>
+<span class="nd">@Cache</span><span class="o">(</span><span class="n">region</span><span class="o">=</span><span class="s">"UcPhone"</span><span class="o">,</span> <span class="n">usage</span> <span class="o">=</span> <span class="nc">CacheConcurrencyStrategy</span><span class="o">.</span><span class="na">READ_WRITE</span><span class="o">)</span>
+<span class="nd">@Entity</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">UcPhone</span> <span class="kd">implements</span> <span class="nc">Serializable</span> <span class="o">{</span>
+</code></pre></div></div>
+<p><br /></p>
+
+<h2 id="구현-기능">구현 기능</h2>
+<h3 id="사용자-조회">사용자 조회</h3>
+
+<p>컬럼 조건에 따라 사용자 검색이 가능하도록 구현하였다.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//UcController.java</span>
+<span class="nd">@PostMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">"/search.html"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="nc">String</span> <span class="nf">search</span><span class="o">(</span><span class="nc">String</span> <span class="n">type</span><span class="o">,</span> <span class="nc">String</span> <span class="n">search</span><span class="o">,</span> <span class="nc">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>
+   <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"search started targeting -&gt;"</span> <span class="o">+</span> <span class="n">search</span> <span class="o">+</span> <span class="s">"==================================="</span><span class="o">);</span>
+   <span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"search"</span><span class="o">,</span> <span class="n">search</span><span class="o">);</span>
+   <span class="k">if</span> <span class="o">(</span><span class="n">type</span><span class="o">.</span><span class="na">contentEquals</span><span class="o">(</span><span class="s">"byall"</span><span class="o">))</span> <span class="o">{</span> <span class="c1">// 전체 검색</span>
+      
+      <span class="nc">List</span><span class="o">&lt;</span><span class="nc">UcUser</span><span class="o">&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">UcUser</span><span class="o">&gt;();</span> <span class="c1">//최종 결과물 들어갈 리스트</span>
+      <span class="nc">List</span><span class="o">&lt;</span><span class="nc">UcUser</span><span class="o">&gt;</span> <span class="n">ucuserAll</span> <span class="o">=</span> <span class="n">ucService</span><span class="o">.</span><span class="na">findAll</span><span class="o">();</span> <span class="c1">//전체 유저 정보 몽땅 가져와서			</span>
+      <span class="k">for</span> <span class="o">(</span><span class="nc">UcUser</span> <span class="n">usertmp</span> <span class="o">:</span> <span class="n">ucuserAll</span><span class="o">)</span> <span class="o">{</span> <span class="c1">//유저마다 살펴보는데</span>
+         <span class="k">if</span><span class="o">(</span><span class="n">usertmp</span><span class="o">.</span><span class="na">getName</span><span class="o">().</span><span class="na">toLowerCase</span><span class="o">().</span><span class="na">contains</span><span class="o">(</span><span class="n">search</span><span class="o">.</span><span class="na">toLowerCase</span><span class="o">()))</span> <span class="o">{</span> <span class="c1">//대소문자 구분 없이 검색</span>
+            <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">usertmp</span><span class="o">);</span>
+         <span class="o">}</span> <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">usertmp</span><span class="o">.</span><span class="na">getAddress</span><span class="o">().</span><span class="na">toLowerCase</span><span class="o">().</span><span class="na">contains</span><span class="o">(</span><span class="n">search</span><span class="o">.</span><span class="na">toLowerCase</span><span class="o">()))</span> <span class="o">{</span>
+            <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">usertmp</span><span class="o">);</span>
+         <span class="o">}</span> <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">usertmp</span><span class="o">.</span><span class="na">getBusinessName</span><span class="o">().</span><span class="na">toLowerCase</span><span class="o">().</span><span class="na">contains</span><span class="o">(</span><span class="n">search</span><span class="o">.</span><span class="na">toLowerCase</span><span class="o">()))</span> <span class="o">{</span>
+            <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">usertmp</span><span class="o">);</span>
+         <span class="o">}</span> <span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">usertmp</span><span class="o">.</span><span class="na">getDepartmentName</span><span class="o">().</span><span class="na">toLowerCase</span><span class="o">().</span><span class="na">contains</span><span class="o">(</span><span class="n">search</span><span class="o">.</span><span class="na">toLowerCase</span><span class="o">()))</span> <span class="o">{</span>
+            <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">usertmp</span><span class="o">);</span>
+         <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="nc">List</span><span class="o">&lt;</span><span class="nc">UcPhone</span><span class="o">&gt;</span> <span class="n">ucphone</span> <span class="o">=</span> <span class="n">usertmp</span><span class="o">.</span><span class="na">getPhones</span><span class="o">();</span> <span class="c1">//유저가 가지고있는 연락처 정보를 리스트에 넣고					</span>
+            <span class="k">for</span> <span class="o">(</span><span class="nc">UcPhone</span> <span class="n">phonetmp</span> <span class="o">:</span> <span class="n">ucphone</span><span class="o">)</span> <span class="o">{</span> <span class="c1">//그 리스트 보기						</span>
+               <span class="k">if</span><span class="o">(</span><span class="n">phonetmp</span><span class="o">.</span><span class="na">getPhone</span><span class="o">().</span><span class="na">contains</span><span class="o">(</span><span class="n">search</span><span class="o">))</span> <span class="o">{</span>
+                  <span class="n">result</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">usertmp</span><span class="o">);</span>
+                  <span class="k">break</span><span class="o">;</span>
+               <span class="o">}</span>						
+            <span class="o">}</span>
+         <span class="o">}</span>
+      <span class="o">}</span>
+      <span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"searches"</span><span class="o">,</span> <span class="n">result</span><span class="o">);</span>
+   <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">type</span><span class="o">.</span><span class="na">contentEquals</span><span class="o">(</span><span class="s">"byname"</span><span class="o">))</span> <span class="o">{</span> <span class="c1">//이름 포함</span>
+      <span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"searches"</span><span class="o">,</span> <span class="n">ucService</span><span class="o">.</span><span class="na">findAllByNameContaining</span><span class="o">(</span><span class="n">search</span><span class="o">));</span>
+   <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">type</span><span class="o">.</span><span class="na">contentEquals</span><span class="o">(</span><span class="s">"bybusiness"</span><span class="o">))</span> <span class="o">{</span> <span class="c1">//회사명 포함</span>
+      <span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"searches"</span><span class="o">,</span> <span class="n">ucService</span><span class="o">.</span><span class="na">findAllByBusinessNameContaining</span><span class="o">(</span><span class="n">search</span><span class="o">));</span>
+   <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">type</span><span class="o">.</span><span class="na">contentEquals</span><span class="o">(</span><span class="s">"bydepartment"</span><span class="o">))</span> <span class="o">{</span> <span class="c1">//부서명 포함</span>
+      <span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"searches"</span><span class="o">,</span> <span class="n">ucService</span><span class="o">.</span><span class="na">findAllByDepartmentNameContaining</span><span class="o">(</span><span class="n">search</span><span class="o">));</span>
+   <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">type</span><span class="o">.</span><span class="na">contentEquals</span><span class="o">(</span><span class="s">"byaddress"</span><span class="o">))</span> <span class="o">{</span> <span class="c1">//주소 포함</span>
+      <span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"searches"</span><span class="o">,</span> <span class="n">ucService</span><span class="o">.</span><span class="na">findAllByAddressContaining</span><span class="o">(</span><span class="n">search</span><span class="o">));</span>
+   <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">type</span><span class="o">.</span><span class="na">contentEquals</span><span class="o">(</span><span class="s">"byphone"</span><span class="o">))</span> <span class="o">{</span> <span class="c1">//연락처 포함</span>
+      <span class="nc">List</span><span class="o">&lt;</span><span class="nc">UcUser</span><span class="o">&gt;</span> <span class="n">ucuser</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">UcUser</span><span class="o">&gt;();</span>
+      <span class="nc">List</span><span class="o">&lt;</span><span class="nc">UcPhone</span><span class="o">&gt;</span> <span class="n">phones</span> <span class="o">=</span> <span class="n">ucService</span><span class="o">.</span><span class="na">findAllUcPhoneByPhoneContaining</span><span class="o">(</span><span class="n">search</span><span class="o">);</span>
+      <span class="k">for</span> <span class="o">(</span><span class="nc">UcPhone</span> <span class="n">ucPhone</span> <span class="o">:</span> <span class="n">phones</span><span class="o">)</span> <span class="o">{</span> 
+         <span class="n">ucuser</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">ucPhone</span><span class="o">.</span><span class="na">getUcUser</span><span class="o">());</span>
+      <span class="o">}</span>
+      <span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"searches"</span><span class="o">,</span> <span class="n">ucuser</span><span class="o">);</span>
+   <span class="o">}</span>
+   <span class="k">return</span> <span class="s">"search"</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p><br />
+FetchType을 LAZY로 설정하였기 때문에 부모 엔티티를 조회하면 자식 객체와 연동된 리스트에 실제 데이터는 없고 프록시만 존재한다. 
+그러므로 세션이 닫힐 경우 부모와 자식 객체는 분리되어 있기 때문에 더 이상 데이터를 호출할 수 없게 된다. <br />
+위의 이유로 자식 데이터까지 select 하는 메소드가 실행되고 세션이 닫힐 경우, 초기화 되지 않은 프록시에 의해 LazyInitializationException이 발생하였다. <br />
+그래서 자식 데이터를 get해야하는 메서드의 경우 자식 객체를 <strong>Hibernate.initialize()</strong>하여 프록시 강제 초기화 시켰다.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//UcService.java</span>
+<span class="kd">public</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">UcUser</span><span class="o">&gt;</span> <span class="nf">findAllByNameContaining</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">){</span>
+   <span class="nc">List</span><span class="o">&lt;</span><span class="nc">UcUser</span><span class="o">&gt;</span> <span class="n">ucuser</span> <span class="o">=</span> <span class="n">userRepository</span><span class="o">.</span><span class="na">findAllByNameContaining</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+   <span class="k">for</span> <span class="o">(</span><span class="nc">UcUser</span> <span class="n">tmp</span> <span class="o">:</span> <span class="n">ucuser</span><span class="o">)</span> <span class="o">{</span>
+      <span class="nc">Hibernate</span><span class="o">.</span><span class="na">initialize</span><span class="o">(</span><span class="n">tmp</span><span class="o">.</span><span class="na">getPhones</span><span class="o">());</span> <span class="c1">//lazy</span>
+   <span class="o">}</span>
+   <span class="k">return</span> <span class="n">userRepository</span><span class="o">.</span><span class="na">findAllByNameContaining</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p><br /></p>
+
+<h3 id="페이지네이션">페이지네이션</h3>
+<p>JPA가 제공하는 Pageable을 이용하여 페이지네이션을 구현하였다. <br />
+page변수를 받으면 View단에 뿌려줄 버튼의 갯수와 숫자를 함수로 구해 model에 담아서 전달하고 View단에서는 반복문으로 버튼을 생성하였다.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//UcController.java</span>
+<span class="nd">@GetMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">"/{page}"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="nc">String</span> <span class="nf">list</span><span class="o">(</span><span class="nd">@PathVariable</span><span class="o">(</span><span class="s">"page"</span><span class="o">)</span> <span class="nc">Integer</span> <span class="n">page</span><span class="o">,</span> <span class="nc">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"list.jsp started!==================================="</span><span class="o">);</span>
+		<span class="nc">Pageable</span> <span class="n">pageable</span> <span class="o">=</span> <span class="nc">PageRequest</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">page</span><span class="o">,</span> <span class="mi">10</span><span class="o">);</span>				
+		
+		<span class="k">if</span> <span class="o">(</span><span class="n">page</span><span class="o">&lt;</span><span class="mi">0</span> <span class="o">||</span> <span class="n">page</span><span class="o">==</span><span class="kc">null</span><span class="o">)</span> <span class="o">{</span> <span class="c1">//오류 처리</span>
+			<span class="n">page</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+		<span class="o">}</span>		
+		<span class="c1">//뽑혀야 할 전체 페이지버튼 수</span>
+		<span class="kt">long</span> <span class="n">cntTmp</span> <span class="o">=</span> <span class="n">ucService</span><span class="o">.</span><span class="na">userCount</span><span class="o">();</span>
+		<span class="kt">double</span> <span class="n">cntTmp2</span> <span class="o">=</span> <span class="n">cntTmp</span><span class="o">/</span><span class="mf">10.0</span><span class="o">;</span>
+		<span class="kt">long</span> <span class="n">finalVal</span> <span class="o">=</span> <span class="o">(</span><span class="kt">long</span><span class="o">)</span> <span class="o">(</span><span class="nc">Math</span><span class="o">.</span><span class="na">ceil</span><span class="o">(</span><span class="n">cntTmp2</span><span class="o">));</span>
+		
+		<span class="c1">//한 화면에 보여줄 첫번째 버튼과 마지막 버튼(ex.1과5, 6과 10..)</span>
+		<span class="kt">long</span> <span class="n">startTmp</span> <span class="o">=</span> <span class="n">page</span><span class="o">/</span><span class="mi">5</span><span class="o">;</span>
+		<span class="kt">long</span> <span class="n">startRange</span> <span class="o">=</span> <span class="n">startTmp</span><span class="o">*</span><span class="mi">5</span><span class="o">;</span>
+		<span class="kt">long</span> <span class="n">endRange</span> <span class="o">=((</span><span class="n">startTmp</span><span class="o">+</span><span class="mi">1</span><span class="o">)*</span><span class="mi">5</span><span class="o">)-</span><span class="mi">1</span><span class="o">;</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">endRange</span> <span class="o">&gt;</span> <span class="n">finalVal</span><span class="o">)</span> <span class="o">{</span> <span class="c1">//맨 마지막 화면에서는 다섯개 버튼X, 마지막 숫자에서 끊어주는 작업</span>
+			<span class="n">endRange</span> <span class="o">=</span> <span class="n">finalVal</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+		<span class="o">}</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">endRange</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span> <span class="c1">//데이터가 0개일 경우</span>
+			<span class="n">endRange</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+		<span class="o">}</span>		
+		<span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"page"</span><span class="o">,</span> <span class="n">page</span><span class="o">);</span>
+		<span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"totalCount"</span><span class="o">,</span> <span class="n">cntTmp</span><span class="o">);</span>
+		<span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"startRange"</span><span class="o">,</span> <span class="n">startRange</span><span class="o">);</span>
+		<span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"endRange"</span><span class="o">,</span> <span class="n">endRange</span><span class="o">);</span>
+		<span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"totalPage"</span><span class="o">,</span> <span class="n">finalVal</span><span class="o">);</span>
+		<span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"users"</span><span class="o">,</span> <span class="n">ucService</span><span class="o">.</span><span class="na">findAllPage</span><span class="o">(</span><span class="n">pageable</span><span class="o">));</span>
+		<span class="k">return</span> <span class="s">"list"</span><span class="o">;</span>
+	<span class="o">}</span>
+</code></pre></div></div>
+
+<div class="language-jsp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//list.jsp
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"paging"</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"ui animated button"</span> <span class="na">tabindex=</span><span class="s">"0"</span> <span class="na">onclick=</span><span class="s">"location.href='/0'"</span><span class="nt">&gt;</span> <span class="c">&lt;!-- 맨 앞으로 --&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"visible content"</span><span class="nt">&gt;</span>《<span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"hidden content"</span><span class="nt">&gt;</span>Head<span class="nt">&lt;/div&gt;</span>
+   <span class="nt">&lt;/div&gt;</span>
+   <span class="nt">&lt;c:if </span><span class="na">test=</span><span class="s">"</span><span class="si">${</span><span class="o">!</span><span class="n">users</span><span class="o">.</span><span class="na">first</span><span class="si">}</span><span class="s">"</span><span class="nt">&gt;</span> <span class="c">&lt;!-- 이전으로 --&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"ui animated button"</span> <span class="na">tabindex=</span><span class="s">"0"</span> <span class="na">onclick=</span><span class="s">"location.href='${users.number-1}'"</span><span class="nt">&gt;</span> 
+         <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"visible content"</span><span class="nt">&gt;</span>〈<span class="nt">&lt;/div&gt;</span>
+         <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"hidden content"</span><span class="nt">&gt;</span>Prev<span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+   <span class="nt">&lt;/c:if&gt;</span>
+
+   <span class="nt">&lt;c:forEach </span><span class="na">begin=</span><span class="s">"</span><span class="si">${</span><span class="n">startRange</span> <span class="si">}</span><span class="s">"</span><span class="na"> end=</span><span class="s">"</span><span class="si">${</span><span class="n">endRange</span> <span class="si">}</span><span class="s">"</span><span class="na"> var=</span><span class="s">"e"</span><span class="nt">&gt;</span><span class="c">&lt;!--페이지 버튼 출력--&gt;</span>
+      <span class="nt">&lt;button</span> <span class="na">type=</span><span class="s">"button"</span> <span class="na">class=</span><span class="s">"ui button"</span> <span class="na">id=</span><span class="s">"button${e }"</span> <span class="na">onclick=</span><span class="s">"location.href='${e }'"</span><span class="nt">&gt;</span>${e+1 }<span class="nt">&lt;/button&gt;</span>
+   <span class="nt">&lt;/c:forEach&gt;</span>
+
+   <span class="nt">&lt;c:if </span><span class="na">test=</span><span class="s">"</span><span class="si">${</span><span class="o">!</span><span class="n">users</span><span class="o">.</span><span class="na">last</span><span class="si">}</span><span class="s">"</span><span class="nt">&gt;</span><span class="c">&lt;!--다음으로--&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"ui animated button"</span> <span class="na">tabindex=</span><span class="s">"0"</span> <span class="na">onclick=</span><span class="s">"location.href='${users.number+1}'"</span><span class="nt">&gt;</span>
+         <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"visible content"</span><span class="nt">&gt;</span>〉<span class="nt">&lt;/div&gt;</span>
+         <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"hidden content"</span><span class="nt">&gt;</span>Next<span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+   <span class="nt">&lt;/c:if&gt;</span>
+   <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"ui animated button"</span> <span class="na">tabindex=</span><span class="s">"0"</span> <span class="na">onclick=</span><span class="s">"location.href='/${totalPage-1 }'"</span><span class="nt">&gt;</span> <span class="c">&lt;!--맨 뒤로--&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"visible content"</span><span class="nt">&gt;</span>》<span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"hidden content"</span><span class="nt">&gt;</span>Tail<span class="nt">&lt;/div&gt;</span>
+   <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></div></div>
+<p><br /></p>
+
+<h3 id="음성-검색">음성 검색</h3>
+<p>Chrome의 음성 인식 API를 이용하여 JavaScript로 처리하였다.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//list.jsp</span>
+<span class="k">if</span> <span class="p">(</span><span class="dl">'</span><span class="s1">SpeechRecognition</span><span class="dl">'</span> <span class="k">in</span> <span class="nb">window</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">음성인식을 지원하는 브라우저입니다.</span><span class="dl">"</span><span class="p">)</span>
+ <span class="p">}</span>
+ <span class="k">try</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">recognition</span> <span class="o">=</span> <span class="k">new</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">SpeechRecognition</span> <span class="o">||</span> <span class="nb">window</span><span class="p">.</span><span class="nx">webkitSpeechRecognition</span>
+    		<span class="o">||</span> <span class="nb">window</span><span class="p">.</span><span class="nx">mozSpeechRecognition</span> <span class="o">||</span> <span class="nb">window</span><span class="p">.</span><span class="nx">msSpeechRecognition</span><span class="p">)();</span>
+ <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
+ <span class="p">}</span>
+ 
+ <span class="kd">var</span> <span class="nx">getvoices</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+ 
+<span class="kd">function</span> <span class="nx">check_speech</span><span class="p">(){</span>  
+    <span class="nx">recognition</span><span class="p">.</span><span class="nx">lang</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">ko-KR</span><span class="dl">'</span><span class="p">;</span>
+    <span class="nx">recognition</span><span class="p">.</span><span class="nx">interimResults</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="nx">recognition</span><span class="p">.</span><span class="nx">maxAlternatives</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="nx">recognition</span><span class="p">.</span><span class="nx">continuous</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">getvoices</span><span class="p">)</span> <span class="nx">speech_to_text</span><span class="p">();</span>
+    <span class="k">else</span> <span class="nx">stop</span><span class="p">();</span>
+ <span class="p">}</span>
+ <span class="kd">function</span> <span class="nx">speech_to_text</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">getvoices</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+
+    <span class="nx">recognition</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
+    <span class="kd">var</span> <span class="nx">resText</span> <span class="o">=</span> <span class="dl">""</span><span class="p">;</span>
+
+    <span class="nx">recognition</span><span class="p">.</span><span class="nx">onstart</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+       <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">음성인식이 시작 되었습니다.</span><span class="dl">"</span><span class="p">)</span>
+       <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">"</span><span class="s2">speech</span><span class="dl">"</span><span class="p">).</span><span class="nx">value</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">인식중..</span><span class="dl">"</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nx">recognition</span><span class="p">.</span><span class="nx">onresult</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+       <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">You said: </span><span class="dl">'</span><span class="p">,</span> <span class="nx">event</span><span class="p">.</span><span class="nx">results</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">].</span><span class="nx">transcript</span><span class="p">);</span>
+       <span class="nx">resText</span> <span class="o">=</span> <span class="nx">resText</span> <span class="o">+</span> <span class="nx">event</span><span class="p">.</span><span class="nx">results</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">].</span><span class="nx">transcript</span><span class="p">;</span>
+       <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">"</span><span class="s2">search</span><span class="dl">"</span><span class="p">).</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">resText</span><span class="p">;</span>
+    <span class="p">};</span>
+    <span class="nx">recognition</span><span class="p">.</span><span class="nx">onend</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+       <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">"</span><span class="s2">speech</span><span class="dl">"</span><span class="p">).</span><span class="nx">value</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">음성인식</span><span class="dl">"</span><span class="p">;</span>
+    <span class="p">}</span>
+ <span class="p">}</span>
+ <span class="kd">function</span> <span class="nx">stop</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">recognition</span><span class="p">.</span><span class="nx">stop</span><span class="p">();</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">"</span><span class="s2">speech</span><span class="dl">"</span><span class="p">).</span><span class="nx">value</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">음성인식</span><span class="dl">"</span><span class="p">;</span>
+    <span class="nx">getvoices</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+ <span class="p">}</span>
+</code></pre></div></div>
+<p><br /></p>
+
+<h3 id="사용자-crud---수정-날짜-기록">사용자 CRUD - 수정 날짜 기록</h3>
+
+<p>정보 수정 시 마지막 수정일이 업데이트 되도록 구현하였다.  <br />
+insert와 update가 한 메서드에서 이루어지므로 update시 등록일자까지 동시에 변경되지 않도록 등록일 변수는 updatable을 false로 지정하였다. <br />
+이렇게 설정하면 Controller에서 서버시간을 set하여도 쿼리 자체에 해당 컬럼이 포함되지 않는다.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//UcUser.java</span>
+<span class="nd">@Column</span><span class="o">(</span><span class="n">columnDefinition</span><span class="o">=</span><span class="s">"TIMESTAMP DEFAULT CURRENT_TIMESTAMP"</span><span class="o">,</span> <span class="n">updatable</span> <span class="o">=</span> <span class="kc">false</span><span class="o">,</span> <span class="n">insertable</span> <span class="o">=</span> <span class="kc">true</span><span class="o">)</span>
+	<span class="kd">private</span> <span class="nc">Date</span> <span class="n">registeredOn</span><span class="o">;</span> <span class="c1">//등록일</span>
+	
+<span class="nd">@Column</span><span class="o">(</span><span class="n">columnDefinition</span><span class="o">=</span><span class="s">"TIMESTAMP DEFAULT CURRENT_TIMESTAMP"</span><span class="o">,</span> <span class="n">updatable</span> <span class="o">=</span> <span class="kc">true</span><span class="o">,</span> <span class="n">insertable</span> <span class="o">=</span> <span class="kc">true</span><span class="o">)</span>
+<span class="kd">private</span> <span class="nc">Date</span> <span class="n">lastUpdatedOn</span><span class="o">;</span> <span class="c1">//마지막 수정일</span>
+</code></pre></div></div>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//UcController.java</span>
+<span class="nd">@PostMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">"/save.html"</span><span class="o">)</span>
+<span class="nd">@DateTimeFormat</span><span class="o">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s">"yyyy-MM-dd"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="nc">String</span> <span class="nf">save</span><span class="o">(</span><span class="nc">UcUser</span> <span class="n">ucUser</span><span class="o">)</span> <span class="o">{</span>
+   <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"save started targeting -&gt;"</span> <span class="o">+</span> <span class="n">ucUser</span><span class="o">.</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">"==================================="</span><span class="o">);</span>
+   <span class="k">try</span> <span class="o">{</span>
+      <span class="nc">Calendar</span> <span class="n">calt</span> <span class="o">=</span> <span class="nc">Calendar</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
+      <span class="n">ucUser</span><span class="o">.</span><span class="na">setLastUpdatedOn</span><span class="o">(</span><span class="n">calt</span><span class="o">.</span><span class="na">getTime</span><span class="o">());</span>
+      <span class="n">ucUser</span><span class="o">.</span><span class="na">setRegisteredOn</span><span class="o">(</span><span class="n">calt</span><span class="o">.</span><span class="na">getTime</span><span class="o">());</span>
+      <span class="n">ucService</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">ucUser</span><span class="o">);</span>
+   <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+   <span class="o">}</span>
+   <span class="k">return</span> <span class="s">"redirect:/0"</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p><br /></p>
+
+<h3 id="연락처-crud---중복-검사">연락처 CRUD - 중복 검사</h3>
+<p>연락처 중복 검사를 Controller에서 구현할 경우 경고창 띄우기가 복잡하여 View단에서 ajax 비동기방식으로 처리하였다.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//editform.jsp</span>
+<span class="kd">function</span> <span class="nx">checking</span><span class="p">(){</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="dl">'</span><span class="s1">#phone</span><span class="dl">'</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span><span class="o">==</span><span class="dl">""</span><span class="p">){</span>
+        <span class="nx">alert</span><span class="p">(</span><span class="dl">'</span><span class="s1">번호를 입력해 주세요</span><span class="dl">'</span><span class="p">);</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="kd">var</span> <span class="nx">userid</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">"</span><span class="s2">userid</span><span class="dl">"</span><span class="p">).</span><span class="nx">value</span><span class="p">;</span>
+	<span class="kd">var</span> <span class="nx">phone</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">"</span><span class="s2">phone</span><span class="dl">"</span><span class="p">).</span><span class="nx">value</span><span class="p">;</span>
+	<span class="kd">var</span> <span class="nx">carrier</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">"</span><span class="s2">carrier</span><span class="dl">"</span><span class="p">).</span><span class="nx">value</span><span class="p">;</span>
+	<span class="kd">var</span> <span class="kd">set</span> <span class="o">=</span> <span class="p">{</span><span class="dl">'</span><span class="s1">phone</span><span class="dl">'</span><span class="p">:</span> <span class="nx">phone</span><span class="p">,</span> <span class="dl">'</span><span class="s1">carrier</span><span class="dl">'</span><span class="p">:</span> <span class="nx">carrier</span><span class="p">,</span> <span class="dl">'</span><span class="s1">userid</span><span class="dl">'</span><span class="p">:</span> <span class="nx">userid</span><span class="p">};</span>
+	
+	<span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+		<span class="na">url</span><span class="p">:</span> <span class="dl">"</span><span class="s2">/save2.html</span><span class="dl">"</span><span class="p">,</span>
+		<span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">POST</span><span class="dl">"</span><span class="p">,</span>
+		<span class="na">data</span><span class="p">:</span> <span class="kd">set</span><span class="p">,</span>
+		<span class="na">success</span><span class="p">:</span> <span class="kd">function</span><span class="p">(){</span>
+			<span class="nx">alert</span><span class="p">(</span><span class="dl">"</span><span class="s2">번호 등록 완료</span><span class="dl">"</span><span class="p">);</span>
+			<span class="nx">location</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="dl">"</span><span class="s2">/oneview.html/</span><span class="dl">"</span><span class="o">+</span> <span class="nx">userid</span><span class="p">);</span>
+		<span class="p">},</span>
+		<span class="na">error</span><span class="p">:</span> <span class="kd">function</span><span class="p">(){</span>
+			<span class="nx">alert</span><span class="p">(</span><span class="dl">"</span><span class="s2">번호 중복</span><span class="dl">"</span><span class="p">);</span>
+		<span class="p">}</span>	
+	<span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="시연-영상">시연 영상</h2>
+
+<style>.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }</style>
+<div class="embed-container">    <iframe title="YouTube video player" width="640" height="390" src="//www.youtube.com/embed/xw-3VIGQBrM" frameborder="0" allowfullscreen=""></iframe></div>
+
+<h2 id="프로젝트-회고">프로젝트 회고</h2>
+<p>Spring Framework를 이용하여 MVC 모델에 확실히 적응하였다. <br />
+초반 환경 설정이 가장 까다롭고 어려운 작업임을 느꼈고, Hibernate 다루기가 어색하였지만 <br />
+결과적으로 JDBC만을 이용하던 다른 프로젝트보다 쿼리 자체에 대한 의존도를 낮추고 <br />
+모듈화를 심화할 수 있었다.  <br />
+또한 1, 2차 캐시를 적용하여 이론으로 알고 있던 캐시를 직접 확인할 수 있었다.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#hibernate" class="page__taxonomy-item" rel="tag">Hibernate</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#ignite" class="page__taxonomy-item" rel="tag">Ignite</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#jpa" class="page__taxonomy-item" rel="tag">JPA</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#spring" class="page__taxonomy-item" rel="tag">Spring</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#portfolios" class="page__taxonomy-item" rel="tag">portfolios</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2019-09-26T00:00:00+09:00">September 26, 2019</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Spring%2C+Hibernate%EB%A5%BC+%EC%A0%81%EC%9A%A9%ED%95%9C+%EC%82%AC%EC%9A%A9%EC%9E%90+%EA%B4%80%EB%A6%AC+%EB%AA%A8%EB%93%88+%EA%B5%AC%ED%98%84%3Cbr%3E-+%EA%B8%B0%EC%97%85+%EC%97%B0%EA%B3%84+%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%20https%3A%2F%2Fnurring.github.io%2Fportfolios%2Fucmodule%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fnurring.github.io%2Fportfolios%2Fucmodule%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fnurring.github.io%2Fportfolios%2Fucmodule%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+      <!--내가 추가한 back to top-->
+      <a href="#page-title" class="back-to-top">Back to Top &uarr;</a>
+      
+  <nav class="pagination">
+    
+      <a href="/portfolios/resort/" class="pagination--pager" title="웹 기반 리조트 예약 시스템
+">Previous</a>
+    
+    
+      <a href="/portfolios/devicemntr/" class="pagination--pager" title="디바이스 리포트 &amp; 실시간 모니터링 웹 프로그램- 기업 연계 프로젝트
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/portfolios/devicemntr/" rel="permalink">디바이스 리포트 &amp; 실시간 모니터링 웹 프로그램<br />- 기업 연계 프로젝트
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  4 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">2019.10.21 - 2019.11.28
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/portfolios/resort/" rel="permalink">웹 기반 리조트 예약 시스템
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">2019.9.2 - 2019.9.18
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+      
+        
+      
+        
+          <li><a href="https://github.com/nurring" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2019 Nuri Na. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>
