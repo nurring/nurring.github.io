@@ -89,7 +89,7 @@ facebook:
   username               :
   app_id                 :
   publisher              :
-og_image                 : "/assets/images/na.jpg" # Open Graph/Twitter default site image
+og_image                 : "/assets/images/pp.jpeg" # Open Graph/Twitter default site image
 # For specifying social profiles
 # - https://developers.google.com/structured-data/customize/social-profiles
 social:
@@ -108,7 +108,7 @@ analytics:
 # Site Author
 author:
   name             : "Nuri Na"
-  avatar           : "/assets/images/na.jpg" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
+  avatar           : "/assets/images/pp.jpeg" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
   bio              : "I do **programming**."
   location         : "Korea"
   email            :
